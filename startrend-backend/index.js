@@ -18,7 +18,6 @@ app.use(express.json());
 // Connect DB
 connectDB();
 
-// Test environment variables (optional - remove in production)
 console.log('=== Environment Variables Check ===');
 console.log('Email User:', process.env.EMAIL_USER || '❌ NOT SET');
 console.log('Email Password:', process.env.EMAIL_PASSWORD ? '✅ SET' : '❌ NOT SET');

@@ -12,16 +12,25 @@ export default function Products() {
   const [loading, setLoading] = useState(true);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editing, setEditing] = useState(null);
+  const [fetchingProduct, setFetchingProduct] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
+  const [saving, setSaving] = useState(false);
 
   async function load() {
     setLoading(true);
-    const list = await api.getAllProducts();
-    setProducts(list);
-    setLoading(false);
+    try {
+      const list = await api.getAllProducts();
+      console.log('Loaded products:', list);
+      setProducts(list);
+    } catch (error) {
+      console.error('Error loading products:', error);
+      alert('Failed to load products. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
@@ -29,10 +38,28 @@ export default function Products() {
   }, []);
 
   async function handleUpdate(id, data) {
-    const updated = await api.updateProduct(id, data);
-    setProducts((p) => p.map((it) => (String(it.id) === String(id) ? updated : it)));
-    setShowEditModal(false);
-    setEditing(null);
+    setSaving(true);
+    try {
+      const updated = await api.updateProduct(id, data);
+      
+      setProducts((prevProducts) => 
+        prevProducts.map((product) => 
+          String(product.id) === String(id) ? updated : product
+        )
+      );
+      
+      setShowEditModal(false);
+      setEditing(null);
+      alert('Product updated successfully!');
+      
+      // Reload the list to ensure we have the latest data
+      await load();
+    } catch (error) {
+      console.error('Error updating product:', error);
+      alert('Failed to update product. Please try again.');
+    } finally {
+      setSaving(false);
+    }
   }
 
   async function handleDelete(id) {
@@ -59,9 +86,26 @@ export default function Products() {
     setShowDeleteConfirm(true);
   };
 
-  const openEditModal = (product) => {
-    setEditing(product);
+  const openEditModal = async (product) => {
     setShowEditModal(true);
+    setFetchingProduct(true);
+    setEditing(null);
+    console.log('product', product);
+    
+    try {
+      console.log('Fetching product data for ID:', product.id);
+      const freshProductData = await api.getProductById(product.id);
+      console.log('Fetched product data:', freshProductData);
+      
+      // Set the editing state with the fresh data
+      setEditing(freshProductData);
+    } catch (error) {
+      console.error('Error fetching product:', error);
+      alert('Failed to load product data. Please try again.');
+      setShowEditModal(false);
+    } finally {
+      setFetchingProduct(false);
+    }
   };
 
   // Pagination calculations
@@ -88,7 +132,6 @@ export default function Products() {
       startPage = Math.max(1, endPage - maxVisible + 1);
     }
 
-    // Previous button
     buttons.push(
       <button
         key="prev"
@@ -100,7 +143,6 @@ export default function Products() {
       </button>
     );
 
-    // First page
     if (startPage > 1) {
       buttons.push(
         <button
@@ -116,7 +158,6 @@ export default function Products() {
       }
     }
 
-    // Page numbers
     for (let i = startPage; i <= endPage; i++) {
       buttons.push(
         <button
@@ -133,7 +174,6 @@ export default function Products() {
       );
     }
 
-    // Last page
     if (endPage < totalPages) {
       if (endPage < totalPages - 1) {
         buttons.push(<span key="dots2" className="px-2">...</span>);
@@ -149,7 +189,6 @@ export default function Products() {
       );
     }
 
-    // Next button
     buttons.push(
       <button
         key="next"
@@ -201,7 +240,7 @@ export default function Products() {
             ) : currentProducts.length === 0 ? (
               <tr><td colSpan="5" className="p-6 text-center">No products</td></tr>
             ) : currentProducts.map((p) => (
-              <tr key={p.id} className="border-t">
+              <tr key={p.id} className="border-t hover:bg-gray-50">
                 <td className="p-3 flex items-center gap-3">
                   {p.imageUrl ? <img src={p.imageUrl} alt={p.name} className="w-14 h-14 object-cover rounded" /> : <div className="w-14 h-14 bg-gray-100 rounded" />}
                   <div>
@@ -221,7 +260,7 @@ export default function Products() {
                       View
                     </button>
                     <button 
-                      className="px-3 py-1 border rounded text-sm hover:bg-gray-50" 
+                      className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 transition-colors" 
                       onClick={() => openEditModal(p)}
                     >
                       Edit
@@ -239,7 +278,6 @@ export default function Products() {
           </tbody>
         </table>
 
-        {/* Pagination */}
         {!loading && products.length > ITEMS_PER_PAGE && (
           <div className="border-t p-4 flex items-center justify-between">
             <div className="text-sm text-gray-600">
@@ -253,31 +291,47 @@ export default function Products() {
       </div>
 
       {/* Edit Product Modal */}
-      {showEditModal && editing && (
+      {showEditModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b flex items-center justify-between sticky top-0 bg-white">
-              <h3 className="text-xl font-bold">Edit Product — {editing.name}</h3>
+            <div className="p-6 border-b flex items-center justify-between sticky top-0 bg-white z-10">
+              <h3 className="text-xl font-bold">
+                {fetchingProduct ? 'Loading Product...' : `Edit Product — ${editing?.name || ''}`}
+              </h3>
               <button 
                 onClick={() => {
                   setShowEditModal(false);
                   setEditing(null);
                 }}
                 className="text-gray-500 hover:text-gray-700 text-2xl"
+                disabled={saving || fetchingProduct}
               >
                 ×
               </button>
             </div>
 
             <div className="p-6">
-              <ProductForm
-                initial={editing}
-                onCancel={() => {
-                  setShowEditModal(false);
-                  setEditing(null);
-                }}
-                onSave={(data) => handleUpdate(editing.id, data)}
-              />
+              {fetchingProduct ? (
+                <div className="flex flex-col items-center justify-center py-12">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+                  <p className="text-gray-600">Loading product data...</p>
+                </div>
+              ) : editing ? (
+                <ProductForm
+                  productId={editing.id}
+                  initial={editing}
+                  onCancel={() => {
+                    setShowEditModal(false);
+                    setEditing(null);
+                  }}
+                  onSave={(data) => handleUpdate(editing.id, data)}
+                  saving={saving}
+                />
+              ) : (
+                <div className="text-center py-8 text-gray-500">
+                  Failed to load product data
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -287,7 +341,7 @@ export default function Products() {
       {selectedProduct && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b flex items-center justify-between sticky top-0 bg-white">
+            <div className="p-6 border-b flex items-center justify-between sticky top-0 bg-white z-10">
               <h3 className="text-xl font-bold">Product Details</h3>
               <button 
                 onClick={() => setSelectedProduct(null)}
@@ -298,7 +352,6 @@ export default function Products() {
             </div>
 
             <div className="p-6 space-y-6">
-              {/* Product Image */}
               {selectedProduct.imageUrl && (
                 <div className="flex justify-center">
                   <img 
@@ -309,7 +362,6 @@ export default function Products() {
                 </div>
               )}
 
-              {/* Basic Info */}
               <div>
                 <h4 className="text-2xl font-bold mb-2">{selectedProduct.name}</h4>
                 <div className="flex items-center gap-4 text-sm text-gray-600">
@@ -318,7 +370,6 @@ export default function Products() {
                 </div>
               </div>
 
-              {/* Description */}
               {selectedProduct.description && (
                 <div className="border-t pt-4">
                   <h5 className="font-semibold mb-2 text-gray-700">Description</h5>
@@ -326,7 +377,6 @@ export default function Products() {
                 </div>
               )}
 
-              {/* Pricing & Stock */}
               <div className="border-t pt-4 grid grid-cols-2 gap-4">
                 <div>
                   <h5 className="font-semibold mb-2 text-gray-700">Price</h5>
@@ -338,7 +388,6 @@ export default function Products() {
                 </div>
               </div>
 
-              {/* Additional Details */}
               {(selectedProduct.brand || selectedProduct.model || selectedProduct.color) && (
                 <div className="border-t pt-4">
                   <h5 className="font-semibold mb-3 text-gray-700">Additional Information</h5>
@@ -365,12 +414,12 @@ export default function Products() {
                 </div>
               )}
 
-              {/* Actions */}
               <div className="border-t pt-4 flex justify-between gap-3">
                 <button
                   onClick={() => {
+                    const productToEdit = selectedProduct;
                     setSelectedProduct(null);
-                    openEditModal(selectedProduct);
+                    openEditModal(productToEdit);
                   }}
                   className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
                 >
