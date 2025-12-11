@@ -223,7 +223,7 @@ export default function CheckoutPage() {
             customerAddress: `${form.address.trim()}, ${form.city.trim()}, ${form.zip.trim()}`,
             totalAmount: grandPKR,
             items: cartItems,
-            adminEmail: 'ali.qwerty32a0@gmail.com'
+            adminEmail: 'abdulrehmanshahid486@gmail.com'
           })
         });
       } catch (emailError) {
