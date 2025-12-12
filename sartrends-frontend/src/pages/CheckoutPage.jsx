@@ -14,14 +14,14 @@ const THEME = {
   paneBlack: '#0b0b0b'
 };
 
-const USD_TO_PKR_RATE = 280;
+// const USD_TO_PKR_RATE = 280;
 const DELIVERY_PKR = 350;
-const DELIVERY_USD = DELIVERY_PKR / USD_TO_PKR_RATE;
+const DELIVERY_USD = DELIVERY_PKR;
 
-const formatPKRFromUSD = (usd) => {
-  const pkr = Math.round((parseFloat(usd) || 0) * USD_TO_PKR_RATE);
-  return new Intl.NumberFormat('en-PK', { style: 'currency', currency: 'PKR', maximumFractionDigits: 0 }).format(pkr).replace('PKR', 'Rs');
-};
+// const formatPKRFromUSD = (usd) => {
+//   const pkr = Math.round((parseFloat(usd) || 0) * USD_TO_PKR_RATE);
+//   return new Intl.NumberFormat('en-PK', { style: 'currency', currency: 'PKR', maximumFractionDigits: 0 }).format(pkr).replace('PKR', 'Rs');
+// };
 
 const STEPS = { SHIPPING: 1, PAYMENT: 2, REVIEW: 3 };
 
@@ -75,9 +75,9 @@ export default function CheckoutPage() {
   const shippingUSD = DELIVERY_USD;
   const grandUSD = subtotalUSD + shippingUSD;
 
-  const subtotalPKR = formatPKRFromUSD(subtotalUSD);
-  const shippingPKR = formatPKRFromUSD(shippingUSD);
-  const grandPKR = formatPKRFromUSD(grandUSD);
+  const subtotalPKR = subtotalUSD;
+  const shippingPKR = shippingUSD;
+  const grandPKR = grandUSD;
 
   useEffect(() => {
     if (!cartItems || cartItems.length === 0) {
@@ -172,13 +172,13 @@ export default function CheckoutPage() {
             return item.products.map(p => ({
               productId: p.id || p._id,
               quantity: item.quantity || 1,
-              price: Math.round((Number(p.price ?? p.rate) || 0) * USD_TO_PKR_RATE)
+              price: Math.round((Number(p.price ?? p.rate) || 0))
             }));
           }
           return {
             productId: item.id || item._id,
             quantity: item.quantity || 1,
-            price: Math.round((Number(item.price ?? item.rate) || 0) * USD_TO_PKR_RATE)
+            price: Math.round((Number(item.price ?? item.rate) || 0))
           };
         }).flat(),
         
@@ -189,7 +189,7 @@ export default function CheckoutPage() {
         paymentMethod: "COD",
         paymentStatus: "pending",
         orderStatus: "pending",
-        totalAmount: Math.round(grandUSD * USD_TO_PKR_RATE)
+        totalAmount: Math.round(grandUSD)
       };
 
       // Create order
@@ -376,7 +376,7 @@ export default function CheckoutPage() {
                         <li key={p.id} className="flex items-center justify-between">
                           <span>{p.name}</span>
                           <span className="ml-4">
-                            {priceNum === 0 ? <span className="text-green-600 font-bold">FREE</span> : <span className="font-medium">{formatPKRFromUSD(priceNum)}</span>}
+                            {priceNum === 0 ? <span className="text-green-600 font-bold">FREE</span> : <span className="font-medium">{priceNum}</span>}
                           </span>
                         </li>
                       );
@@ -384,7 +384,7 @@ export default function CheckoutPage() {
                   </ul>
                 ) : (
                   <div className="text-sm text-gray-600 mt-2">
-                    {(Number(item.price ?? item.rate) === 0 || item.isFree) ? <span className="text-green-600 font-bold">FREE</span> : <span className="font-medium">{formatPKRFromUSD(item.price ?? item.rate)}</span>}
+                    {(Number(item.price ?? item.rate) === 0 || item.isFree) ? <span className="text-green-600 font-bold">FREE</span> : <span className="font-medium">{item.price ?? item.rate}</span>}
                   </div>
                 )}
               </div>

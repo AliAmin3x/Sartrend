@@ -7,21 +7,21 @@ import { useCart } from '../context/CartContext';
 // Define the ORIGINAL Metallic Gold color for button/accent
 const METALLIC_GOLD = "#8C783C"; 
 const REFINED_CHARCOAL = '#212121';
-const USD_TO_PKR_RATE = 280; 
+// const USD_TO_PKR_RATE = 280; 
 
-const convertToPKR = (usdRate) => {
-    const numericRate = parseFloat(usdRate);
-    
-    if (isNaN(numericRate)) {
-        return "Price N/A";
-    }
+// const convertToPKR = (usdRate) => {
+//     const numericRate = parseFloat(usdRate);
+//     
+//     if (isNaN(numericRate)) {
+//         return "Price N/A";
+//     }
 
-    return (numericRate * USD_TO_PKR_RATE).toLocaleString('en-PK', {
-        style: 'currency',
-        currency: 'PKR',
-        minimumFractionDigits: 0, 
-    });
-};
+//     return (numericRate * USD_TO_PKR_RATE).toLocaleString('en-PK', {
+//         style: 'currency',
+//         currency: 'PKR',
+//         minimumFractionDigits: 0, 
+//     });
+// };
 
 
 // Product Card Component (Re-used from original ProductListPage styling)
@@ -61,7 +61,7 @@ const ProductCard = ({ product, handleBuyNow, handleAddToCart }) => (
           
           {/* Price/Rate in PKR */}
           <p className="text-2xl font-bold mb-4 tracking-wide" style={{ color: METALLIC_GOLD, fontFamily: "Roboto, sans-serif" }}>
-              {convertToPKR(product.rate)}
+              {product.rate}
           </p>
       </div>
 
@@ -101,7 +101,7 @@ export default function SarTrendsProductsPage() {
             product => product.category.toLowerCase() === 'sartrends'
         );
         // 🌟 Ensure only the first 4 products are displayed, as requested
-        setSarTrendsProducts(filtered.slice(0, 4)); 
+        filtered.slice(0, 4); 
         window.scrollTo(0, 0); 
     }, []);
 

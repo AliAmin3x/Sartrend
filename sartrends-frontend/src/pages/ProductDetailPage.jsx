@@ -5,8 +5,8 @@ import { products } from '../data/products';
 import { useCart } from '../context/CartContext.jsx'; 
 
 // --- Theme and Helpers ---
-const USD_TO_PKR_RATE = 280; 
-const signatureGold = '#B8860B';
+// const USD_TO_PKR_RATE = 280; 
+// const signatureGold = '#B8860B';
 const metallicGold = '#D4AF37';
 const refinedCharcoal = '#212121';
 const primaryFont = "'Playfair Display', serif";
@@ -15,7 +15,7 @@ const secondaryFont = "'Inter', sans-serif";
 const convertToPKR = (usdAmount) => {
     const numericRate = parseFloat(usdAmount);
     if (isNaN(numericRate)) return "Price N/A";
-    return (numericRate * USD_TO_PKR_RATE).toLocaleString('en-PK', {
+    return (numericRate).toLocaleString('en-PK', {
         style: 'currency',
         currency: 'PKR',
         minimumFractionDigits: 0,

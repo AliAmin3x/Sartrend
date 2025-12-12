@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { products } from '../data/products';
+// import { products } from '../data/products';
 import AnimatedHeader from '../Components/AnimatedHeader';
 import { useCart } from '../context/CartContext';
 
@@ -12,14 +12,14 @@ const signatureGold = '#B8860B';
 const metallicGold = '#D4AF37';
 const lightPeach = '#FFEBE4'; 
 const lightBackground = '#F7F7F7';
-const USD_TO_PKR_RATE = 280;
+// const USD_TO_PKR_RATE = 280;
 
 const primaryFont = "'Playfair Display', serif"; 
 const secondaryFont = "'Inter', sans-serif"; 
 
 const convertToPKR = (usdPrice) => {
   const validPrice = parseFloat(usdPrice) || 0;
-  return (validPrice * USD_TO_PKR_RATE).toLocaleString('en-PK', {
+  return (validPrice).toLocaleString('en-PK', {
     style: 'currency',
     currency: 'PKR',
     minimumFractionDigits: 0,
@@ -34,11 +34,11 @@ export default function FragrancePage() {
   useEffect(() => {
     window.scrollTo(0, 0);
 
-    const fragranceProducts = products.filter(
-      (product) => String(product.category).toLowerCase() === 'fragrance'
-    );
+    // const fragranceProducts = products.filter(
+    //   (product) => String(product.category).toLowerCase() === 'fragrance'
+    // );
 
-    setFilteredProducts(fragranceProducts);
+    // setFilteredProducts(fragranceProducts);
   }, []);
 
   const mainTitle = 'Luxury Fragrance Collection';

@@ -57,6 +57,7 @@ export default function ProductListPage() {
       try {
         const response = await fetch("http://localhost:5000/api/products");
         const data = await response.json();
+        console.log("Fetched products data:", data);
 
         if (data.success && Array.isArray(data.products)) {
           // Fix fields for UI

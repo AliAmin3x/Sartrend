@@ -23,7 +23,7 @@ export default function Products() {
     setLoading(true);
     try {
       const list = await api.getAllProducts();
-      console.log('Loaded products:', list);
+      // console.log('Loaded products:', list);
       setProducts(list);
     } catch (error) {
       console.error('Error loading products:', error);
@@ -63,7 +63,7 @@ export default function Products() {
   }
 
   async function handleDelete(id) {
-    console.log('Deleting product:', id);
+    // console.log('Deleting product:', id);
     
     try {
       await api.deleteProduct(id);
@@ -90,12 +90,12 @@ export default function Products() {
     setShowEditModal(true);
     setFetchingProduct(true);
     setEditing(null);
-    console.log('product', product);
+    // console.log('product', product);
     
     try {
-      console.log('Fetching product data for ID:', product.id);
+      // console.log('Fetching product data for ID:', product.id);
       const freshProductData = await api.getProductById(product.id);
-      console.log('Fetched product data:', freshProductData);
+      // console.log('Fetched product data:', freshProductData);
       
       // Set the editing state with the fresh data
       setEditing(freshProductData);

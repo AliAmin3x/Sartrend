@@ -9,11 +9,11 @@ import { slugify } from '../utils/helpers';
 // --- Theme and Helpers ---
 const refinedCharcoal = '#212121';
 const signatureGold = '#B8860B';
-const USD_TO_PKR_RATE = 280; 
+// const USD_TO_PKR_RATE = 280; 
 
 const convertToPKR = (usdPrice) => {
     const validPrice = parseFloat(usdPrice) || 0;
-    return (validPrice * USD_TO_PKR_RATE).toLocaleString('en-PK', {
+    return (validPrice).toLocaleString('en-PK', {
         style: 'currency',
         currency: 'PKR',
         minimumFractionDigits: 0,

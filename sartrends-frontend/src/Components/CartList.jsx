@@ -2,11 +2,11 @@
 import React from "react";
 import { useCart } from "../context/CartContext.jsx";
 
-const USD_TO_PKR_RATE = 280;
+// const USD_TO_PKR_RATE = 280;
 const convertToPKR = (usdAmount) => {
   const num = Number(usdAmount);
   if (isNaN(num)) return "Price N/A";
-  return (num * USD_TO_PKR_RATE).toLocaleString("en-PK", {
+  return (num).toLocaleString("en-PK", {
     style: "currency",
     currency: "PKR",
     minimumFractionDigits: 0,

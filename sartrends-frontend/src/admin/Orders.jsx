@@ -58,14 +58,14 @@ export default function Orders() {
   }
 
   async function deleteOrder(orderId) {
-    console.log('Confirming delete for order:', orderId);
+    // console.log('Confirming delete for order:', orderId);
     
     try {
       const response = await fetch(`http://localhost:5000/api/orders/${orderId}`, {
         method: 'DELETE'
       });
       
-      console.log('Response status:', response.status);
+      // console.log('Response status:', response.status);
       
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
@@ -78,7 +78,7 @@ export default function Orders() {
       setShowDeleteConfirm(false);
       setOrderToDelete(null);
       
-      console.log('Order deleted successfully');
+      // console.log('Order deleted successfully');
       alert('Order deleted successfully!');
     } catch (error) {
       console.error('Error deleting order:', error);

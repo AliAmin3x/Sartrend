@@ -9,7 +9,7 @@ import AnimatedHeader from '../Components/AnimatedHeader';
 const refinedCharcoal = '#212121'; // Luxury Black
 const signatureGold = '#B8860B'; // Gold Accent
 const lightBackground = '#F7F7F7'; 
-const USD_TO_PKR_RATE = 280; 
+// const USD_TO_PKR_RATE = 280; 
 const FIXED_SHIPPING_PKR = 350; // 350 PKR fixed delivery charge
 
 // 🎯 Empty Cart Icon
@@ -30,7 +30,7 @@ const LuxuryEmptyCartIcon = ({ color }) => (
 // Convert USD to PKR
 const convertToPKR = (usdPrice) => {
     const validPrice = parseFloat(usdPrice) || 0;
-    return (validPrice * USD_TO_PKR_RATE).toLocaleString('en-PK', {
+    return (validPrice ).toLocaleString('en-PK', {
         style: 'currency',
         currency: 'PKR',
         minimumFractionDigits: 0,
@@ -62,7 +62,7 @@ export default function CartPage() {
         return acc + ((Number(item.price ?? item.rate) || 0) * (Number(item.quantity) || 1));
     }, 0);
 
-    const shippingUSD = FIXED_SHIPPING_PKR / USD_TO_PKR_RATE;
+    const shippingUSD = FIXED_SHIPPING_PKR;
     const grandTotalUSD = subtotalUSD + shippingUSD;
     const grandTotalPKR = convertToPKR(grandTotalUSD);
 
@@ -124,9 +124,9 @@ export default function CartPage() {
                             }
 
                             // per-item unit display for bundles: compute per-bundle-unit price (sum of product prices)
-                            const unitPriceUSD = Array.isArray(item.products) && item.products.length > 0
-                                ? item.products.reduce((s, p) => s + (Number(p.price ?? p.rate) || 0), 0)
-                                : (Number(item.price ?? item.rate) || 0);
+                            // const unitPriceUSD = Array.isArray(item.products) && item.products.length > 0
+                            //     ? item.products.reduce((s, p) => s + (Number(p.price ?? p.rate) || 0), 0)
+                            //     : (Number(item.price ?? item.rate) || 0);
 
                             return (
                                 <div key={item.id} className="flex py-4 transition-opacity duration-300 border-b border-gray-200 hover:opacity-90">

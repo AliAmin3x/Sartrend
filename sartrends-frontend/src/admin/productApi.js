@@ -33,7 +33,7 @@ export function getAllProducts() {
 export function getProductById(id) {
   return new Promise((res, rej) => {
     const list = load();
-    console.log('getProductById id:', id, 'list:', list);
+    // console.log('getProductById id:', id, 'list:', list);
     const p = list.find((x) => x.id === id);
     setTimeout(() => (p ? res(p) : rej(new Error('Product not found'))), 120);
   });
