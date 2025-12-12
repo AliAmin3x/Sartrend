@@ -70,7 +70,7 @@ export default function Products() {
       setProducts((p) => p.filter((it) => String(it.id) !== String(id)));
       setShowDeleteConfirm(false);
       setProductToDelete(null);
-      setSelectedProduct(null);
+      // setSelectedProduct(null);
       
       alert('Product deleted successfully!');
     } catch (error) {
@@ -259,12 +259,12 @@ export default function Products() {
                     >
                       View
                     </button>
-                    <button 
+                    {/* <button 
                       className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 transition-colors" 
                       onClick={() => openEditModal(p)}
                     >
                       Edit
-                    </button>
+                    </button> */}
                     <button 
                       className="px-3 py-1 border rounded text-sm hover:bg-red-50 hover:text-red-600 transition-colors" 
                       onClick={() => openDeleteConfirm(p)}
