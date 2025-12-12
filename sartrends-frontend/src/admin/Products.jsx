@@ -249,7 +249,7 @@ export default function Products() {
                   </div>
                 </td>
                 <td className="p-3 text-sm">{p.category}</td>
-                <td className="p-3 text-center">{String(p.rate)}</td>
+                <td className="p-3 text-center">{String(p.rate*290)}</td>
                 <td className="p-3 text-center">{p.stock ?? '-'}</td>
                 <td className="p-3 text-center">
                   <div className="flex items-center justify-center gap-2">
@@ -380,7 +380,7 @@ export default function Products() {
               <div className="border-t pt-4 grid grid-cols-2 gap-4">
                 <div>
                   <h5 className="font-semibold mb-2 text-gray-700">Price</h5>
-                  <p className="text-2xl font-bold text-green-600">${selectedProduct.rate}</p>
+                  <p className="text-2xl font-bold text-green-600">PKR {selectedProduct.rate*290}</p>
                 </div>
                 <div>
                   <h5 className="font-semibold mb-2 text-gray-700">Stock</h5>
